@@ -1,0 +1,38 @@
+<div>
+  <h2 md-dialog-title>Online Data Source</h2>
+  <md-dialog-content>
+<md-slide-toggle #formZynxState (change)="onCheck()" ><strong>Zynx API</strong></md-slide-toggle>
+<p>
+Information about Zynx API. 
+</p>
+<div>
+<form class="input-form">
+  <md-input-container class="input-full-width" >
+    <input #formAPIURL mdInput placeholder="Zynx API URL" >
+  </md-input-container>
+</form>
+</div>
+<div>
+<form class="input-form">
+  <md-input-container class="input-full-width">
+    <input #formAPIKey mdInput type="password" placeholder="Zynx API Key" >
+  </md-input-container>
+</form>
+</div>
+  </md-dialog-content> 
+  <md-dialog-content>
+<md-slide-toggle #formCernerState (change)="onCheck()"><strong>Cerner Fhir API Sandbox</strong></md-slide-toggle>
+<p>
+Information about Cerner Fhir API Sandbox. 
+</p>
+<form class="input-form">
+  <md-input-container class="input-full-width">
+    <input #formCernerURL mdInput placeholder="Cerner Fhir API Sandbox URL" >
+  </md-input-container>
+</form>
+  </md-dialog-content> 
+  <md-dialog-actions>
+    <button md-raised-button (click)="onCloseSave()">Save</button>
+    <button md-raised-button (click)="onCloseCancel()">Cancel</button>
+  </md-dialog-actions>
+</div>

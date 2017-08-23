@@ -1,0 +1,104 @@
+.content-card {
+  width: 100%;
+}
+
+h1{
+    color: #43609c;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 20px;
+}
+h2{
+    color: #43609c;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 20px;
+}
+.checkbox {
+    left: 61px;
+    letter-spacing: 0.2px;
+    top: 460px;
+}
+.no-checkbox {
+    font-weight: bold;
+    font-style: italic;
+}
+.actionDefinition {
+    font-size: 20px;
+    font-weight: bold;
+}
+.url-icon {
+    text-decoration: none;
+}
+.spacing {
+    padding-left: 20px;
+}
+
+
+td#activity{
+    color: #43609c;
+    font-weight: bold;
+}
+td#goals{
+    color: #000000;
+    left: 85px;
+    top: 458px;
+    word-spacing: -0.3px;
+    font-size: 14px;
+}
+td#actions{
+    color: #000000;
+    left: 85px;
+    top: 458px;
+    word-spacing: -0.3px;
+    font-size: 14px;
+    padding-left: 20px;
+}
+td#actions-detail{
+    color: #000000;
+    left: 85px;
+    top: 458px;
+    word-spacing: -0.3px;
+    font-size: 14px;
+    padding-left: 40px;
+}
+td#detail{
+    color: #000000;
+    left: 85px;
+    top: 458px;
+    word-spacing: -0.3px;
+    font-size: 14px;
+    padding-left: 80px;
+}
+
+table{
+    border-collapse: separate;
+}
+table,
+td{
+    vertical-align: text-top;
+    font-size: 16px;
+}
+td#section{
+    color: #43609c;
+    font-weight: bold;
+}
+td#sub-section{
+    color: #000000;
+    left: 85px;
+    top: 458px;
+    word-spacing: -0.3px;
+    font-size: 14px;
+}
+td#medication{
+    color: #000000;
+    left: 85px;
+    top: 458px;
+    word-spacing: -0.3px;
+    font-size: 14px;
+}
+td#med-detail{                   
+			color: #000000;
+    left: 85px;
+    top: 458px;
+    word-spacing: -0.3px;
+    font-size: 14px;
+}

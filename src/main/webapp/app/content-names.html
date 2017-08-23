@@ -1,0 +1,15 @@
+<br [hidden]="!contentNamesVisible()" />
+<div [hidden]="!contentNamesVisible()" class="example-container mat-elevation-z8">
+  <md-table #table [dataSource]="dataSource" mdSort>
+
+    <!-- Name Column -->
+    <ng-container cdkColumnDef="contentName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header> Content Name </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.name}} </md-cell>
+    </ng-container>
+
+    <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
+    <md-row *cdkRowDef="let row; columns: displayedColumns;" (click)="rowClick($event)" ></md-row>
+  </md-table>
+</div>
+
