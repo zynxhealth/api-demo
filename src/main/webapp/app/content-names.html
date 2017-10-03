@@ -1,5 +1,5 @@
 <br [hidden]="!contentNamesVisible()" />
-<div [hidden]="!contentNamesVisible()" class="example-container mat-elevation-z8">
+<div [hidden]="!contentNamesVisible()" class="example-container mat-elevation-z2">
   <md-table #table [dataSource]="dataSource" mdSort>
 
     <!-- Name Column -->
@@ -12,4 +12,3 @@
     <md-row *cdkRowDef="let row; columns: displayedColumns;" (click)="rowClick($event)" ></md-row>
   </md-table>
 </div>
-

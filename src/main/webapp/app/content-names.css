@@ -22,3 +22,22 @@
   color: black;
 }
 
+.mat-row {
+  cursor:pointer!important;
+}
+
+.mat-row:hover {
+  background:#f7f7f7;
+}
+
+.mat-header-cell,
+.mat-header-row {
+  color:#025893;
+  font-size:16px;
+  font-weight:600;
+}
+
+.mat-cell {
+  font-size:16px!important;
+  font-weight:400;
+}

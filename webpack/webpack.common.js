@@ -103,7 +103,12 @@ module.exports = (options) => {
                 { from: './src/main/webapp/favicon.ico', to: 'favicon.ico' },
                 { from: './src/main/webapp/manifest.webapp', to: 'manifest.webapp' },
                 // { from: './src/main/webapp/sw.js', to: 'sw.js' },
-                { from: './src/main/webapp/robots.txt', to: 'robots.txt' }
+                { from: './src/main/webapp/robots.txt', to: 'robots.txt' },
+                { from: './src/main/webapp/content/images/step1.png', to: 'step1.png' },
+                { from: './src/main/webapp/content/images/step2.png', to: 'step2.png' },
+                { from: './src/main/webapp/content/images/step3.png', to: 'step3.png' },
+                { from: './src/main/webapp/content/images/step4.png', to: 'step4.png' }
+
             ]),
             new webpack.ProvidePlugin({
                 $: "jquery",

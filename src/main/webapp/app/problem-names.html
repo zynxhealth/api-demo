@@ -1,5 +1,5 @@
 <br [hidden]="!problemNamesVisible()" />
-<div [hidden]="!problemNamesVisible()" class="example-container mat-elevation-z8">
+<div [hidden]="!problemNamesVisible()" class="example-container mat-elevation-z2">
   <md-table #table [dataSource]="dataSource" mdSort>
 
     <!-- Name Column -->
@@ -12,6 +12,5 @@
     <md-row *cdkRowDef="let row; columns: displayedColumns;" (click)="rowClick($event)" ></md-row>
   </md-table>
   <md-progress-bar [hidden]="!progressBarVisible()" mode="query">
-      </md-progress-bar> 
+      </md-progress-bar>
 </div>
-

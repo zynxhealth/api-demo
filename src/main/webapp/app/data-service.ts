@@ -4,6 +4,8 @@ import {MdSort} from '@angular/material';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { config } from './config';
+import { zynx_config } from './config';
 
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/observable/merge';
@@ -33,7 +35,7 @@ export class DataService {
   problemDatabase = new ExampleDatabase();
   contentDatabase = new ExampleDatabase();
   transXtoH = new TransformXMLtoHTML();
-  sampleContent =  new SampleOrderSetXML(); 
+  sampleContent =  new SampleOrderSetXML();
 
 
   dataState = DataState.Start;
@@ -41,15 +43,20 @@ export class DataService {
   dataStateProblemProgress=DataState.PatientSelected_ProgressEnd;
   dataSynthetic = true;
   cernerURL ='https://fhir-open.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/';
-  aPIKey ='';
-  aPIURL ='https://api.cb.zynx.com/dev-v0/fhir-a/baseDstu3/';
+  aPIKey = zynx_config.aPIKey;
+  aPIURL = zynx_config.aPIURL;
   cernerState=false;
-  zynxState=false;
+  smartFhirApiUrl= config.smartFhirApiUrl;
+  smartFhirId="";
+  smartFhirState=false;
+  smartFhirToken="";
+  zynxState=true;
+
 
   constructor(private http: HttpClient){
   }
 
-  getCernerURL(){ return this.cernerURL; } 
+  getCernerURL(){ return this.cernerURL; }
 
   setCernerURL(val:string) {this.cernerURL=val;}
 
@@ -111,7 +118,7 @@ export class DataService {
      return new ExampleDataSource(this.contentDatabase);
   }
 
- 
+
   searchByName(name:string) {
      this.dataState=DataState.PatientSearch;
      this.dataStatePatientProgress=DataState.PatientSearch_ProgressStart;
@@ -120,9 +127,9 @@ export class DataService {
         this.patientDatabase.clearData();
         this.http.get<any> (this.getCernerURL()+"Patient?name="+name+"*").subscribe(data => {
           let dataLength=data.entry.length
-	  for (let i = 0; i < 6 && i < dataLength; i++) {
-	    this.patientDatabase.addName(data.entry[i].resource.name[0].text,data.entry[i].resource.id);
-	  }
+      	  for (let i = 0; i < 6 && i < dataLength; i++) {
+      	    this.patientDatabase.addName(data.entry[i].resource.name[0].text,data.entry[i].resource.id);
+      	  }
           this.dataStatePatientProgress=DataState.PatientSearch_ProgressEnd;
         });
      }
@@ -158,15 +165,37 @@ export class DataService {
 		      this.problemDatabase.addProblem(data.entry[i].resource.code.text);
                     }
 		  }
-                  // Forces the addition of Ashtma to patient for Demo
-                  this.problemDatabase.addProblem("Asthma");
-		  this.dataStateProblemProgress=DataState.PatientSelected_ProgressEnd;
+          // Forces the addition of Ashtma to patient for Demo
+          this.problemDatabase.addProblem("Asthma");
+          this.dataStateProblemProgress=DataState.PatientSelected_ProgressEnd;
 	       });
        }
        else
        {
           this.dataStateProblemProgress=DataState.PatientSelected_ProgressEnd;
        }
+     }
+     else if(this.smartFhirState)
+     {
+       this.problemDatabase.clearData();
+       this.http.get(
+         this.smartFhirApiUrl + "Condition?patient=Patient/" + this.smartFhirId,
+         {
+           responseType: 'json',
+           headers: new HttpHeaders()
+             .set('Authorization', 'Bearer ' + this.smartFhirToken)
+             .set('Accept', "application/json")
+         }
+       ).subscribe(data => {
+          let dataLength = data["entry"].length
+   		    for (let i = 0; i < 6 && i < dataLength; i++) {
+            if(data["entry"][i].resource.code!==null){
+   		         this.problemDatabase.addProblem(data["entry"][i].resource.code.text);
+            }
+   		     }
+       })
+       this.problemDatabase.addProblem("Asthma");
+       this.dataStateProblemProgress=DataState.PatientSelected_ProgressEnd;
      }
      else
      {
@@ -180,27 +209,34 @@ export class DataService {
      this.contentDatabase.getContent(name);
      this.dataState=DataState.ProblemSelected
   }
-  
+
   htmlContent="No Content Selected.";
+  rawContent= "No Content Selected.";
 
   clearUnSelectedContent(name:string) {
      this.contentDatabase.clearUnSelectedNames(name);
        if (this.zynxState===true) {
-	 this.http.get(this.getAPIURL()+"PlanDefinition/ZynxOS-795",{ responseType: 'text',
-              headers: new HttpHeaders({'Accept':'application/fhir+xml'}).set('x-api-key',this.getAPIKey())})
+	 this.http.get(this.getAPIURL()+"c1d06f95-c9f4-436d-ae8b-4de9c141867b",{ responseType: 'text',
+              headers: new HttpHeaders({'Accept':'application/xml'}).set('Authorization','Bearer ' + this.getAPIKey())})
            .subscribe(data => {
            //console.log("Retreived data for content from Zynx.");
            this.htmlContent=this.transXtoH.transform(data,'os');
+           this.rawContent = data
            console.log(this.htmlContent);
          });
        }
        else {
           let localSampleContent=this.sampleContent.getSampleOrderSetXML();
           this.htmlContent=this.transXtoH.transform(localSampleContent,'os');
+          this.rawContent = localSampleContent
        }
      this.dataState=DataState.ContentSelected
   }
-  
+
+  getRawContentSelected(name:string) {
+     return this.rawContent;
+  }
+
   getContentSelected(name:string) {
      return this.htmlContent;
   }
@@ -233,7 +269,7 @@ export class PatientDatabase {
 
   clearData(){
      this.dataChange.next([]);
-  } 
+  }
 
   addName(nameVal:string,idVal:string){
     const copiedData = this.data.slice();
@@ -250,11 +286,11 @@ export class PatientDatabase {
     const copiedData = this.data.slice();
     for (var i = 0; i < copiedData.length; i++) {
       if (copiedData[i].name===nameVal){
-        this.dataChange.next([{name:copiedData[i].name,id: copiedData[i].id}]); 
+        this.dataChange.next([{name:copiedData[i].name,id: copiedData[i].id}]);
         console.log("Set next to :" +nameVal);
         break;
       }
-    } 
+    }
   }
 
   /** Adds a new user to the database. */
@@ -263,7 +299,7 @@ export class PatientDatabase {
     copiedData.push(this.createNewUser(name));
     this.dataChange.next(copiedData);
   }
-   
+
   /** Builds and returns a new User. */
   private createNewUser(nameVal:string) {
     const name =
@@ -313,7 +349,7 @@ export class ExampleDatabase {
 
   clearData(){
      this.dataChange.next([]);
-  } 
+  }
 
   addName(nameVal:string){
     const copiedData = this.data.slice();
@@ -330,11 +366,11 @@ export class ExampleDatabase {
     const copiedData = this.data.slice();
     for (var i = 0; i < copiedData.length; i++) {
       if (copiedData[i].name===nameVal){
-        this.dataChange.next([{name:nameVal}]); 
+        this.dataChange.next([{name:nameVal}]);
         console.log("Set next to :" +nameVal);
         break;
       }
-    } 
+    }
   }
 
   /** Adds a new user to the database. */
@@ -343,7 +379,7 @@ export class ExampleDatabase {
     copiedData.push(this.createNewUser(name));
     this.dataChange.next(copiedData);
   }
-   
+
   /** Builds and returns a new User. */
   private createNewUser(nameVal:string) {
     const name =
@@ -400,7 +436,7 @@ export class ExampleDataSource extends DataSource<any> {
 
 export class TransformXMLtoHTML {
   XSLprovider = new XSLFile();
-  XSLRemoveNamespace = new XSLFileRemoveNamespace(); 
+  XSLRemoveNamespace = new XSLFileRemoveNamespace();
 
   removeNameSpace(xmlNSDoc) : Node {
     let xsltText = this.XSLRemoveNamespace.getXSLFileRemoveNamespace();
@@ -426,7 +462,7 @@ export class TransformXMLtoHTML {
     let strHtml = serializer.serializeToString(resultDoc);
     return strHtml;
   }
-  
+
   transformJson(contentDoc:Node,typeContent:string): string {
     let domParser = new DOMParser();
     let xsltText =   this.XSLprovider.getXSL(typeContent);
@@ -438,7 +474,7 @@ export class TransformXMLtoHTML {
     let strHtml = serializer.serializeToString(resultDoc);
     return strHtml;
   }
- 
+
 }
 
 export class SampleOrderSetXML {
@@ -555,13 +591,13 @@ export class SampleOrderSetXML {
                 </definition>
             </action>
         </action>
-    </action>    
+    </action>
 </PlanDefinition>
   `;
-  
+
   getSampleOrderSetXML() {
     return this.mySampleOrderSetXML;
-  }  
+  }
 }
 
 export class XSLFile {
@@ -570,17 +606,18 @@ export class XSLFile {
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:template match="PlanDefinition">
          <div>
-                <h1 style='color: #43609c;font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 20px;'><xsl:value-of select="publisher/@value"/> - <xsl:value-of select="title/@value"
+                <h1 style='color: #43609c;font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 26px;'><xsl:value-of select="publisher/@value"/> - <xsl:value-of select="title/@value"
                     /></h1>
-                <h2 style='color: #43609c;font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 20px;'> Version : <xsl:value-of select="version/@value"/>
+                <h2 style='color: #43609c;font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 18px;'> Version : <xsl:value-of select="version/@value"/>
                 </h2>
-                <h2 style='color: #43609c;font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 20px;' >
+                <h2 style='color: #43609c;font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 14px;' >
                     <xsl:value-of select="date/@value"/>
                 </h2>
+                <style>table td {font-size: 18px!important; padding:5px 0!important;} input {margin-right:5px!important;}</style>
                 <table style="border-collapse: separate;">
                     <xsl:for-each select="action">
                             <tr>
-                                <td id="section" style="vertical-align: text-top;font-size: 16px; color: #43609c; font-weight: bold;"><xsl:value-of select="title/@value"/></td>
+                                <td id="section" style="vertical-align: text-top;font-size: 16px; color: #43609c; font-weight: bold; border-bottom:1px solid #e6e6e6; padding-top:15px!important;"><xsl:value-of select="title/@value"/></td>
                             </tr>
                             <xsl:for-each select="action">
                                 <xsl:variable name="selection" select="selectionBehavior/@value"/>
@@ -616,7 +653,7 @@ export class XSLFile {
                                                     </xsl:if>
                                             </xsl:otherwise>
                                         </xsl:choose>
- 
+
                                         <xsl:if test="$urlValue !=''">
                                             <span style="padding-left: 20px;">
                                                 <!--<xsl:value-of select="documentation/display/@value"/>-->
@@ -625,7 +662,7 @@ export class XSLFile {
                                                 </a>
                                             </span>
                                         </xsl:if>
- 
+
                                     </td>
                                 </tr>
                                 <xsl:for-each select="action">
@@ -633,10 +670,10 @@ export class XSLFile {
                                     <xsl:variable name="ADDtitle1" select="title/@value"/>
                                     <xsl:variable name="medication" select="textEquivalent/@value"/>
                                     <xsl:variable name="urlValue1" select="documentation/url/@value"/>
- 
+
                                     <tr>
                                         <td id="medication" style="vertical-align:text-top;color:#000000;left:85px;top:458px;word-spacing:-0.3px;font-size:14px;">
- 
+
                                             <xsl:if test="$selection1 !=''">
                                                 <input type="checkbox" style="left: 61px; letter-spacing: 0.2px; top: 460px;"></input>
                                             </xsl:if>
@@ -673,7 +710,7 @@ export class XSLFile {
                     </table>
          </div>
     </xsl:template>
- 
+
 </xsl:stylesheet>
   `;
 
@@ -797,7 +834,7 @@ export class XSLFile {
                                                     </xsl:if>
                                             </xsl:otherwise>
                                         </xsl:choose>
- 
+
                                         <xsl:if test="$urlValue !=''">
                                             <span class="spacing">
                                                 <!--<xsl:value-of select="documentation/display/@value"/>-->
@@ -806,7 +843,7 @@ export class XSLFile {
                                                 </a>
                                             </span>
                                         </xsl:if>
- 
+
                                     </td>
                                 </tr>
                                 <xsl:for-each select="action">
@@ -814,10 +851,10 @@ export class XSLFile {
                                     <xsl:variable name="ADtitle1" select="title/@value"/>
                                     <xsl:variable name="goals" select="textEquivalent/@value"/>
                                     <xsl:variable name="urlValue1" select="documentation/url/@value"/>
- 
+
                                     <tr>
                                         <td id="actions">
- 
+
                                             <xsl:if test="$selection1 !='any'">
                                                 <input type="checkbox" class="checkbox"></input>
                                             </xsl:if>
@@ -851,7 +888,7 @@ export class XSLFile {
                                                 </xsl:if>
                                             </td>
                                         </tr>
- 
+
                                         <xsl:for-each select="action">
                                             <xsl:variable name="selection2" select="selectionBehavior/@value"/>
                                             <xsl:variable name="detail" select="textEquivalent/@value"/>
@@ -873,17 +910,17 @@ export class XSLFile {
                     </table>
         </div>
     </xsl:template>
- 
+
 </xsl:stylesheet>
   `;
 
   getXSL(typeContent:string){
     if(typeContent==='os'){
       return this.myOrdersetXSLFile;
-    } 
+    }
     if(typeContent==='poc'){
       return this.myOrdersetXSLFile;
-    } 
+    }
   }
 }
 
@@ -892,7 +929,7 @@ export class XSLFileRemoveNamespace {
   xslFileRemoveNamespace=`<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="xml" indent="yes"/>
- 
+
     <xsl:template match="*">
         <xsl:element name="{local-name(.)}">
             <xsl:apply-templates select="@* | node()"/>
@@ -903,7 +940,7 @@ export class XSLFileRemoveNamespace {
             <xsl:value-of select="."/>
         </xsl:attribute>
     </xsl:template>
- 
+
     <xsl:template match="@*[local-name(.)='noNamespaceSchemaLocation']"/>
 </xsl:stylesheet>
 `;

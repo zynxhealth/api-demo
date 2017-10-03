@@ -1,6 +1,13 @@
 <br>
-<md-card [hidden]="!contentCardVisible()" class="content-card">
-  <md-card-content>
-     <div [innerHTML]="contentCardHTML"></div>
-  </md-card-content>
-</md-card>
+<md-tab-group [hidden]="!contentCardVisible()">
+  <md-tab label="Content">
+    <md-card [hidden]="!contentCardVisible()" class="content-card">
+      <md-card-content>
+         <div [innerHTML]="contentCardHTML"></div>
+      </md-card-content>
+    </md-card>
+  </md-tab>
+  <md-tab label="Raw output">
+    <pre>{{contentCardRaw}}</pre>
+  </md-tab>
+</md-tab-group>

@@ -58,10 +58,12 @@ import {ContentNames} from './content-names';
 import {DataService} from './data-service';
 import {ContentCard} from './content-card';
 
-import {InputFormExample} from './input-form-example';
+import {SearchForm} from './search-form';
 import {HttpModule} from '@angular/http';
 import {CdkTableModule} from '@angular/cdk';
 import {HttpClientModule} from '@angular/common/http';
+
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 @NgModule({
   exports: [
@@ -112,16 +114,19 @@ import {
     PageRibbonComponent,
     ErrorComponent
 } from './layouts';
+
+import { smartFhir } from "./smart-fhir"
+
 import { OnlineDataDialogComponent } from './online-data-dialog/online-data-dialog.component';
 
 @NgModule({
     imports: [
-	BrowserAnimationsModule,
-	FormsModule,
-	HttpModule,
-	PlunkerMaterialModule,
-	MdNativeDateModule,
-	ReactiveFormsModule,
+      	BrowserAnimationsModule,
+      	FormsModule,
+      	HttpModule,
+      	PlunkerMaterialModule,
+      	MdNativeDateModule,
+      	ReactiveFormsModule,
         BrowserModule,
         LayoutRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
@@ -131,11 +136,12 @@ import { OnlineDataDialogComponent } from './online-data-dialog/online-data-dial
         JpipeAccountModule,
         JpipeEntityModule,
         MdDialogModule,
-        HttpClientModule  
+        HttpClientModule,
+        OAuthModule.forRoot()
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
-        InputFormExample,
+        SearchForm,
         //TableSortingExample,
         PatientNames,
         ProblemNames,
@@ -144,6 +150,7 @@ import { OnlineDataDialogComponent } from './online-data-dialog/online-data-dial
         ContentCard,
         JhiMainComponent,
         NavbarComponent,
+        smartFhir,
         ErrorComponent,
         PageRibbonComponent,
         FooterComponent,
@@ -154,9 +161,11 @@ import { OnlineDataDialogComponent } from './online-data-dialog/online-data-dial
         customHttpProvider(),
         PaginationConfig,
         UserRouteAccessService,
-        DataService 
+        DataService
     ],
     bootstrap: [ JhiMainComponent ],
     entryComponents: [ OnlineDataDialogComponent ]
-})
+}
+
+)
 export class JpipeAppModule {}

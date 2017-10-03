@@ -7,6 +7,9 @@ import { Principal, LoginModalService, LoginService } from '../../shared';
 
 import { VERSION, DEBUG_INFO_ENABLED } from '../../app.constants';
 
+import { config } from '././../../config';
+import { DataService, DataState } from './../../data-service';
+
 @Component({
     selector: 'jhi-navbar',
     templateUrl: './navbar.component.html',
@@ -24,6 +27,7 @@ export class NavbarComponent implements OnInit {
     version: string;
 
     constructor(
+        private dataService : DataService,
         private loginService: LoginService,
         private principal: Principal,
         private loginModalService: LoginModalService,
@@ -42,6 +46,10 @@ export class NavbarComponent implements OnInit {
     }
 
     collapseNavbar() {
+        this.dataService.smartFhirState = false
+        this.dataService.dataState = DataState.Start;
+        this.dataService.dataStatePatientProgress = DataState.PatientSearch_ProgressEnd;
+        this.dataService.dataStateProblemProgress = DataState.PatientSelected_ProgressEnd;
         this.isNavbarCollapsed = true;
     }
 
@@ -57,6 +65,25 @@ export class NavbarComponent implements OnInit {
         this.collapseNavbar();
         this.loginService.logout();
         this.router.navigate(['']);
+    }
+
+    openSmartFhirAuth(){
+
+      let clientId: string = "18257c4b-de4b-4d79-89a4-cc923bdaee75"
+      let launchUri: string = window.location.protocol + "//" + window.location.host + "/#/smart_fhir";
+
+      let state = Math.round(Math.random()*100000000).toString();
+
+      sessionStorage.setItem('smartFhirAuthState', state);
+
+      let queryParams: string = "response_type=code&" +
+        "client_id=" + encodeURIComponent(config.smartFhirKey) + "&" +
+        "scope=" + encodeURIComponent("launch") + "&" +
+        "redirect_uri=" + encodeURIComponent(config.smartFhirRedirectUri) + "&" +
+        "aud=" + encodeURIComponent(this.dataService.smartFhirApiUrl.replace(/\/$/, "")) + "&" +
+        "state=" + state;
+
+      window.location.href = config.smartFhirAuthServer + "?" + queryParams
     }
 
     toggleNavbar() {

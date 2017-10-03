@@ -1,0 +1,72 @@
+body {
+  font-weight:400;
+}
+
+#flow-hold {
+  background:#f7f7f7;
+  padding:0!important; margin:0!important;
+}
+
+#flow-hold .row {
+  padding:0!important; margin:0!important;
+}
+
+#flow-hold .col-md-12 {
+  padding:0!important; margin:0!important;
+}
+
+#flow-hold img  {
+  display:Block;
+  padding:0;
+  margin:0 auto 5px auto;
+max-width:100%; }
+
+#flow-hold ul {
+  list-style:none;
+  padding:0; margin:0;
+  text-align:center;
+}
+
+#flow-hold li {
+  color:#ccc;
+  display:inline;
+  float:left;
+  font-size:18px;
+  width:25%;
+  padding:10px 0 5px 0; margin:0;
+}
+
+#flow-hold li img {
+  opacity:.5;
+}
+
+#flow-hold li.active {
+  color:#222;
+}
+
+#flow-hold li.active img {
+  opacity:1;
+}
+
+#flow-hold li span {
+  display:block;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+#flow-hold li strong {
+  display:block;
+  font-size:20px;
+}
+
+/* Sidebar */
+
+#sidebar {
+  padding-top:10px;
+}
+
+.mat-row {
+  cursor:pointer!important;
+  font-size:20px!important;
+}

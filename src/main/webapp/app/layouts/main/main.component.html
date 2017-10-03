@@ -2,21 +2,45 @@
     <router-outlet name="navbar"></router-outlet>
 </div>
 
+<div class="container-fluid" id="flow-hold">
+  <div class="row">
+    <div class="col-md-12">
+      <ul id="flow-images">
+        <li class="active">
+          <img src="/step1.png" height="150" width="150">
+          <span *ngIf=!dataService.smartFhirState>Step 1</span><strong *ngIf=!dataService.smartFhirState>Search & select a patient</strong>
+          <span *ngIf=dataService.smartFhirState>Step 1</span><strong *ngIf=dataService.smartFhirState>Select a patient</strong>
+        </li>
+        <li [ngClass]="{active: problemNamesVisible()}">
+          <img src="/step2.png" height="150" width="150">
+          <span>Step 2</span><strong>Choose a problem</strong>
+        </li>
+        <li [ngClass]="{active: contentNamesVisible()}">
+          <img src="/step3.png" height="150" width="150">
+          <span>Step 3</span><strong>Select content</strong>
+        </li>
+        <li [ngClass]="{active: contentCardVisible()}">
+          <img src="/step4.png" height="150" width="150">
+          <span>Step 4</span><strong>View content</strong>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <div class="container-fluid">
-    <div class="card jh-card">
-        <router-outlet></router-outlet>
-        <router-outlet name="popup"></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
+    <router-outlet name="popup"></router-outlet>
     <div class="row">
-	<div class="col-md-4">
-		<input-form-example></input-form-example>
-		<data-slider></data-slider>
-		<patient-names></patient-names>
-		<problem-names></problem-names>
-		<content-names></content-names>
-	</div>
-	<div class="col-md-8">
-                <content-card></content-card>
-	</div>
+    	<div class="col-md-4" id="sidebar">
+    		<search-form *ngIf=!dataService.smartFhirState></search-form>
+    		<patient-names></patient-names>
+    		<problem-names></problem-names>
+    		<content-names></content-names>
+    		<!--data-slider></data-slider--> 
+    	</div>
+	    <div class="col-md-8" id="content">
+        <content-card></content-card>
+	     </div>
     </div>
-   </div>
+</div>

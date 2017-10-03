@@ -2,10 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { navbarRoute } from '../app.route';
+import { smartFhirRoute } from '../app.route';
 import { errorRoute } from './';
 
 const LAYOUT_ROUTES = [
     navbarRoute,
+    smartFhirRoute,
     ...errorRoute
 ];
 

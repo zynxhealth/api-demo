@@ -3,9 +3,8 @@
 }
 
 h1{
-    color: #43609c;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 20px;
+    font-size: 30px;
 }
 h2{
     color: #43609c;
@@ -95,7 +94,7 @@ td#medication{
     word-spacing: -0.3px;
     font-size: 14px;
 }
-td#med-detail{                   
+td#med-detail{
 			color: #000000;
     left: 85px;
     top: 458px;
