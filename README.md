@@ -20,6 +20,7 @@ Go to [https://sandbox.smarthealthit.org/]( https://sandbox.smarthealthit.org/) 
 
 The file "src/main/webapp/app/config.ts" needs to be configured as follows:
 
+```
 export var config = {
   smartFhirTokenServer: '< provided by sandbox EMR >',
   smartFhirAuthServer: '< provided by sandbox EMR >',
@@ -32,6 +33,7 @@ export var zynx_config = {
   aPIKey :'< This is the Zynx API Key you request, see http://developer.zynx.com >',
   aPIURL :'< See the [getting started documentation](https://github.com/zynxhealth/documentation/blob/master/README.md), specifically the Zynx Health API Service Base URL. >'
 }
+```
 
 ## Running Demo Application
 
