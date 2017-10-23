@@ -43,13 +43,13 @@ App Registration
 
 ```
 App Name 				          		: Zynx Api Demo 9000
-SMART Launch URI		                	: http://localhost:9000/#/smart_fhir
-Redirect URI						       	: http://localhost:9000/#/smart_fhir
-App Type					                  		: Provider
+SMART Launch URI		                    	: http://localhost:9000/#/smart_fhir
+Redirect URI					   	: http://localhost:9000/#/smart_fhir
+App Type				    		: Provider
 FHIR Spec (The FHIR version your SMART App will consume)	: dstu2
 Authorized (Does your SMART App require OAuth2?)	    	: Yes
 
-Scopes				                        				: Standard Scopes
+Scopes				              : Standard Scopes
 launch
 profile
 openid
