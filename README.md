@@ -8,13 +8,61 @@ Please visit http://developer.zynx.com to request an API Key.
 
 ## Registering your Demo Application with Online EMR Sandbox
 
+### Smarthealth IT
+
+Go to [https://sandbox.smarthealthit.org/]( https://sandbox.smarthealthit.org/) to registery your localhost demo application.
+Login to https://code.cerner.com/developer/smart-on-fhir/apps
+Click "+ Register Manually" on top
+App Registration
+App Type					: Public Client
+App Name					: Zynx Api Demo 9000
+App Launch URI					: http://localhost:9000/#/smart_fhir
+App Redirect URIs				: http://localhost:9000/#/smart_fhir
+Click Save
+
+Configs for Smarthealth
+
+  smartFhirTokenServer: 'https://sb-auth.smarthealthit.org/token',
+  smartFhirAuthServer: 'https://sb-auth.smarthealthit.org/authorize',
+  smartFhirApiUrl: 'https://sb-fhir-dstu2.smarthealthit.org/smartdstu2/data/',
+  smartFhirKey: 'client id obtained from registered app',
+  smartFhirRedirectUri: 'http://localhost:9000/#/smart_fhir'
+
 ### Cerner
 
 Go to [https://code.cerner.com/developer/smart-on-fhir/](https://code.cerner.com/developer/smart-on-fhir/) to register your localhost demo application.
 
-### Smarthealth IT
+Login to https://code.cerner.com/developer/smart-on-fhir/apps
+Click "+ New App" on top right corner
+App Registration
 
-Go to [https://sandbox.smarthealthit.org/]( https://sandbox.smarthealthit.org/) to registery your localhost demo application.
+App Name 							: Zynx Api Demo 9000
+SMART Launch URI						: http://localhost:9000/#/smart_fhir
+Redirect URI							: http://localhost:9000/#/smart_fhir
+App Type							: Provider
+FHIR Spec (The FHIR version your SMART App will consume)	: dstu2
+Authorized (Does your SMART App require OAuth2?)		: Yes
+
+Scopes								: Standard Scopes
+launch
+profile
+openid
+online_access
+
+User Scopes		Patient Scopes
+Condition * read	Condition * read
+Patient	* read		Patient	* read
+Person * read		Person * read
+
+When you click Save, the next page provides the client id
+Configs for Cerner
+
+ smartFhirTokenServer: 'https://authorization.sandboxcerner.com/tenants/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/protocols/oauth2/profiles/smart-v1/token',
+ smartFhirAuthServer: 'https://authorization.sandboxcerner.com/tenants/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/protocols/oauth2/profiles/smart-v1/personas/provider/authorize',
+ smartFhirApiUrl: 'https://fhir-ehr.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/',
+ smartFhirKey: 'client id obtained from registered app',
+ smartFhirRedirectUri: 'http://localhost:9000/#/smart_fhir'
+
 
 ## Configuring Demo Application
 
