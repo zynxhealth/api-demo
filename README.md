@@ -16,8 +16,8 @@ Click "+ Register Manually" on top
 
 ```
 App Registration
-App Type					: Public Client
-App Name					: Zynx Api Demo 9000
+App Type				: Public Client
+App Name				: Zynx Api Demo 9000
 App Launch URI				: http://localhost:9000/#/smart_fhir
 App Redirect URIs			: http://localhost:9000/#/smart_fhir
 Click Save
@@ -42,7 +42,7 @@ Click "+ New App" on top right corner
 App Registration
 
 ```
-App Name 					                        		: Zynx Api Demo 9000
+App Name 				          		: Zynx Api Demo 9000
 SMART Launch URI		                    				: http://localhost:9000/#/smart_fhir
 Redirect URI						                    	: http://localhost:9000/#/smart_fhir
 App Type					                        		: Provider
